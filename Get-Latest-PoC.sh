@@ -5,10 +5,6 @@
 # PoC Get Latest in BASH (For integration in ArkCommander.sh)
 #------------------------------------------------------------------------------
 
-#SrcFilenameFilter="ark_mainnet_[0-9]"
-# Debug only since Ark.io still with testnet snapshots.
-SrcFilenameFilter="ark_*_[0-9]"
-
 declare -A RemoteFile
 RemoteFile['FullPath']=''
 RemoteFile['FileName']=''
@@ -18,8 +14,8 @@ read -e -r -p "Download from Ark.io? (1) ArkNode.net? (2) Seatrips.eu (3) or use
 if [[ "$CHOICE" =~ [1]$ ]]; then
 	echo -e "Downloading latest snapshot from Ark.io\n"
 	SrcRepo='https://explorer.ark.io/snapshots/'
-	RemoteFile['FileName']=$( curl -s $SrcRepo | grep -o "$SrcFilenameFilter" | sort | tail -n 1 )
-	RemoteFile['FullPath']=$( curl -s $SrcRepo | grep -o "$SrcFilenameFilter" | sort | tail -n 1 )
+	RemoteFile['FileName']=$( curl -s $SrcRepo | grep -o "ark_testnet_[0-9]*" | sort | tail -n 1 )
+	RemoteFile['FullPath']="$SrcRepo${RemoteFile['FileName']}"
 	RemoteFile['Height']=$( echo ${RemoteFile['FileName']} | grep -oh "[0-9]*" )
 	
 	echo "FileName => ${RemoteFile['FileName']}"
@@ -30,8 +26,8 @@ if [[ "$CHOICE" =~ [1]$ ]]; then
 elif [[ "$CHOICE" =~ [2]$ ]]; then
 	echo -e "Downloading latest snapshot from ArkNode.net\n"
 	SrcRepo='https://snapshot.arknode.net/'
-	RemoteFile['FileName']=$( curl -s $SrcRepo | grep -o "$SrcFilenameFilter" | sort | tail -n 1 )
-	RemoteFile['FullPath']=$( curl -s $SrcRepo | grep -o "$SrcFilenameFilter" | sort | tail -n 1 )
+	RemoteFile['FileName']=$( curl -s $SrcRepo | grep -o "ark_mainnet_[0-9]*" | sort | tail -n 1 )
+	RemoteFile['FullPath']="$SrcRepo${RemoteFile['FileName']}"
 	RemoteFile['Height']=$( echo ${RemoteFile['FileName']} | grep -oh "[0-9]*" )
 	
 	echo "FileName => ${RemoteFile['FileName']}"
@@ -42,8 +38,8 @@ elif [[ "$CHOICE" =~ [2]$ ]]; then
 elif [[ "$CHOICE" =~ [3]$ ]]; then
 	echo -e "Downloading latest snapshot from Seatrips.eu\n"
 	SrcRepo='https://arkexplorer.seatrips.eu/snapshots/'
-	RemoteFile['FileName']=$( curl -s $SrcRepo | grep -o "$SrcFilenameFilter" | sort | tail -n 1 )
-	RemoteFile['FullPath']=$( curl -s $SrcRepo | grep -o "$SrcFilenameFilter" | sort | tail -n 1 )
+	RemoteFile['FileName']=$( curl -s $SrcRepo | grep -o "ark_mainnet_[0-9]*" | sort | tail -n 1 )
+	RemoteFile['FullPath']="$SrcRepo${RemoteFile['FileName']}"
 	RemoteFile['Height']=$( echo ${RemoteFile['FileName']} | grep -oh "[0-9]*" )
 	
 	echo "FileName => ${RemoteFile['FileName']}"
