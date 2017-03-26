@@ -5,11 +5,10 @@
 # PoC Get Latest in BASH (For integration in ArkCommander.sh)
 #------------------------------------------------------------------------------
 
-SrcRepoList=(
-  https://snapshot.lisknode.io/     # Gr33nDrag0n
-  https://snapshot.liskwallet.net/  # isabella
-  https://lisktools.io/backups/     # MrV
-)
+function yellow {
+        echo -e "$(tput bold; tput setaf 3)$1$(tput sgr0)"
+}
+
 
 #SrcFilenameFilter="ark_mainnet_[0-9]"
 # Debug only since Ark.io still with testnet snapshots.
@@ -19,7 +18,6 @@ declare -A RemoteFile
 RemoteFile['FullPath']=''
 RemoteFile['FileName']=''
 RemoteFile['Height']=0
-
 
 read -e -r -p "$(yellow "\n Download from Ark.io? (1) ArkNode.net? (2) Seatrips.eu (3) or use Local (L) ")" -i "1" CHOICE
 if [[ "$CHOICE" =~ [1]$ ]]; then
