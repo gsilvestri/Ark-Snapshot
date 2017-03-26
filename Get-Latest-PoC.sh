@@ -5,11 +5,6 @@
 # PoC Get Latest in BASH (For integration in ArkCommander.sh)
 #------------------------------------------------------------------------------
 
-function yellow {
-    echo -e "$(tput bold; tput setaf 3)$1$(tput sgr0)"
-}
-
-
 #SrcFilenameFilter="ark_mainnet_[0-9]"
 # Debug only since Ark.io still with testnet snapshots.
 SrcFilenameFilter="ark_*_[0-9]"
@@ -21,7 +16,7 @@ RemoteFile['Height']=0
 
 read -e -r -p "Download from Ark.io? (1) ArkNode.net? (2) Seatrips.eu (3) or use Local (L)" -i "1" CHOICE
 if [[ "$CHOICE" =~ [1]$ ]]; then
-	echo -e "$(yellow "\n     Downloading latest snapshot from Ark.io\n")"
+	echo -e "Downloading latest snapshot from Ark.io\n"
 	SrcRepo='https://explorer.ark.io/snapshots/'
 	RemoteFile['FileName']=$( curl -s $SrcRepo | grep -o "$SrcFilenameFilter" | sort | tail -n 1 )
 	RemoteFile['FullPath']=$( curl -s $SrcRepo | grep -o "$SrcFilenameFilter" | sort | tail -n 1 )
@@ -32,9 +27,8 @@ if [[ "$CHOICE" =~ [1]$ ]]; then
 	echo "Height => ${RemoteFile['Height']}"
 	
 #	wget -nv ${RemoteFile['FullPath']} -O $SNAPDIR/current
-#	echo -e "$(yellow "\n              Download finished\n")"
 elif [[ "$CHOICE" =~ [2]$ ]]; then
-	echo -e "$(yellow "\n     Downloading latest snapshot from ArkNode.net\n")"
+	echo -e "Downloading latest snapshot from ArkNode.net\n"
 	SrcRepo='https://snapshot.arknode.net/'
 	RemoteFile['FileName']=$( curl -s $SrcRepo | grep -o "$SrcFilenameFilter" | sort | tail -n 1 )
 	RemoteFile['FullPath']=$( curl -s $SrcRepo | grep -o "$SrcFilenameFilter" | sort | tail -n 1 )
@@ -45,9 +39,8 @@ elif [[ "$CHOICE" =~ [2]$ ]]; then
 	echo "Height => ${RemoteFile['Height']}"
 	
 #	wget -nv ${RemoteFile['FullPath']} -O $SNAPDIR/current
-#	echo -e "$(yellow "\n              Download finished\n")"
 elif [[ "$CHOICE" =~ [3]$ ]]; then
-	echo -e "$(yellow "\n     Downloading latest snapshot from Seatrips.eu\n")"
+	echo -e "Downloading latest snapshot from Seatrips.eu\n"
 	SrcRepo='https://arkexplorer.seatrips.eu/snapshots/'
 	RemoteFile['FileName']=$( curl -s $SrcRepo | grep -o "$SrcFilenameFilter" | sort | tail -n 1 )
 	RemoteFile['FullPath']=$( curl -s $SrcRepo | grep -o "$SrcFilenameFilter" | sort | tail -n 1 )
@@ -58,6 +51,5 @@ elif [[ "$CHOICE" =~ [3]$ ]]; then
 	echo "Height => ${RemoteFile['Height']}"
 	
 #	wget -nv ${RemoteFile['FullPath']} -O $SNAPDIR/current
-#	echo -e "$(yellow "\n              Download finished\n")"
 fi
 
