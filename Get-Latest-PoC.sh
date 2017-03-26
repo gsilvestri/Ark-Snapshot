@@ -6,7 +6,7 @@
 #------------------------------------------------------------------------------
 
 function yellow {
-        echo -e "$(tput bold; tput setaf 3)$1$(tput sgr0)"
+    echo -e "$(tput bold; tput setaf 3)$1$(tput sgr0)"
 }
 
 
@@ -19,7 +19,7 @@ RemoteFile['FullPath']=''
 RemoteFile['FileName']=''
 RemoteFile['Height']=0
 
-read -e -r -p "$(yellow "\n Download from Ark.io? (1) ArkNode.net? (2) Seatrips.eu (3) or use Local (L) ")" -i "1" CHOICE
+read -e -r -p "Download from Ark.io? (1) ArkNode.net? (2) Seatrips.eu (3) or use Local (L)" -i "1" CHOICE
 if [[ "$CHOICE" =~ [1]$ ]]; then
 	echo -e "$(yellow "\n     Downloading latest snapshot from Ark.io\n")"
 	SrcRepo='https://explorer.ark.io/snapshots/'
