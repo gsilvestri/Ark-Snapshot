@@ -16,7 +16,7 @@
 #      -.                          `-       $$$$$$$$$$$$$$$$$$$$$$s.        
 #
 #
-# Gr33nDrag0n / v1.0 / 2017-04-03
+# gsilvestri / v1.0 / 2017-12-26
 # Inspired by Tharude (Ark.io) excellent ARKcommander.sh script.
 #
 # - Save to /home/##USER##/LoadSnapshot.sh
@@ -25,7 +25,7 @@
 #
 ###############################################################################
 
-ArkNetwork="mainnet"
-ArkNodeDirectory="$HOME/ark-node"
+KapuNetwork="mainnet"
+KapuNodeDirectory="$HOME/ark-node"
 
 # COMING SOON !

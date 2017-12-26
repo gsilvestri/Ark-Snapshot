@@ -16,10 +16,10 @@
 #      -.                          `-       $$$$$$$$$$$$$$$$$$$$$$s.        
 #
 #
-# Gr33nDrag0n / v1.0 / 2017-03-29
+# gsilvestri / v1.0 / 2017-12-26
 # Inspired by Tharude (Ark.io) excellent ark_snapshot.sh script.
 #
-# Note: I'm using Nginx instead of NodeJS Ark-Explorer to share the files.
+# Note: I'm using Nginx instead of NodeJS Kapu-Explorer to share the files.
 #
 # - Save to /home/##USER##/NewSnapshot.sh
 #
@@ -34,22 +34,22 @@
 #
 ###############################################################################
 
-ArkNetwork="mainnet"
-ArkNodeDirectory="$HOME/ark-node"
-SnapshotDirectory='/opt/nginx/snapshot.arknode.net'
+KapuNetwork="mainnet"
+KapuNodeDirectory="$HOME/kapu-node"
+SnapshotDirectory='/opt/nginx/snapshot.kapunode.net'
 
-### Test Ark-Node Started
-ArkNodePid=$( pgrep -a "node" | grep ark-node | awk '{print $1}' )
-if [ "$ArkNodePid" != "" ] ; then
+### Test kapu-node Started
+KapuNodePid=$( pgrep -a "node" | grep kapu-node | awk '{print $1}' )
+if [ "$KapuNodePid" != "" ] ; then
 
     ### Delete Snapshot(s) older then 6 hours
-    find $SnapshotDirectory -name "ark_$ArkNetwork_*" -type f -mmin +360 -delete
+    find $SnapshotDirectory -name "kapu_$KapuNetwork_*" -type f -mmin +360 -delete
 
     ### Write SeedNodeFile
-    ArkNodeConfig="$ArkNodeDirectory/config.$ArkNetwork.json"
-    SeedNodeFile='/tmp/ark_seednode'
+    KapuNodeConfig="$KapuNodeDirectory/config.$KapuNetwork.json"
+    SeedNodeFile='/tmp/kapu_seednode'
     echo '' > $SeedNodeFile
-    cat $ArkNodeConfig | jq -c -r '.peers.list[]' | while read Line; do
+    cat $KapuNodeConfig | jq -c -r '.peers.list[]' | while read Line; do
         SeedNodeAddress="$( echo $Line | jq -r '.ip' ):$( echo $Line | jq -r '.port' )"
         echo "$SeedNodeAddress" >>  "$SeedNodeFile"
     done
@@ -70,26 +70,26 @@ if [ "$ArkNodePid" != "" ] ; then
         if [ "$SeedNodeHeight" -gt "$TopHeight" ]; then TopHeight=$SeedNodeHeight; fi
     done
 
-    ### Get local ark-node height
-    LocalHeight=$( curl --max-time 2 -s 'http://127.0.0.1:4001/api/loader/status/sync' | jq '.height' )
+    ### Get local kapu-node height
+    LocalHeight=$( curl --max-time 2 -s 'http://127.0.0.1:4600/api/loader/status/sync' | jq '.height' )
 
-    ### Test Ark-Node Sync.
+    ### Test kapu-node Sync.
     if [ "$LocalHeight" -eq "$TopHeight" ]; then
 
-        ForeverPid=$( forever --plain list | grep $ArkNodePid | sed -nr 's/.*\[(.*)\].*/\1/p' )
-        cd $ArkNodeDirectory
+        ForeverPid=$( forever --plain list | grep $KapuNodePid | sed -nr 's/.*\[(.*)\].*/\1/p' )
+        cd $KapuNodeDirectory
 
-        ### Stop Ark-Node
+        ### Stop kapu-node
         forever --plain stop $ForeverPid > /dev/null 2>&1 &
         sleep 1
 
         ### Dump Database
-        SnapshotFilename='ark_'$ArkNetwork'_'$LocalHeight
-        pg_dump -O "ark_$ArkNetwork" -Fc -Z6 > "$SnapshotDirectory/$SnapshotFilename"
+        SnapshotFilename='kapu_'$KapuNetwork'_'$LocalHeight
+        pg_dump -O "kapu_$KapuNetwork" -Fc -Z6 > "$SnapshotDirectory/$SnapshotFilename"
         sleep 1
 
-        ### Start Ark-Node
-        forever --plain start app.js --genesis "genesisBlock.$ArkNetwork.json" --config "config.$ArkNetwork.json" > /dev/null 2>&1 &
+        ### Start kapu-node
+        forever --plain start app.js --genesis "genesisBlock.$KapuNetwork.json" --config "config.$KapuNetwork.json" > /dev/null 2>&1 &
 
         ### Update Symbolic Link
         rm -f "$SnapshotDirectory/current"
